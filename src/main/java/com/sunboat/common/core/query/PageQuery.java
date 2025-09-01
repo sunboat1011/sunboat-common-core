@@ -1,4 +1,4 @@
-package com.company.common.core.query;
+package com.sunboat.common.core.query;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -11,11 +11,12 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.company</groupId>
+    <groupId>com.sunboat</groupId>
     <artifactId>common-core</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-first-SNAPSHOT</version>
     <name>common-core</name>
     <description>公共核心模块</description>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- Spring Boot 基础依赖 -->
@@ -54,18 +55,33 @@
 
     <build>
         <plugins>
+            <!-- 移除spring-boot-maven-plugin或仅保留编译功能 -->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <!-- 分发管理 -->
+    <distributionManagement>
+        <!-- 发布版本仓库 -->
+        <repository>
+            <id>sunboat-maven-repo</id>
+            <name>sunboat-maven-repo</name>
+            <url>http://localhost:8081/repository/sunboat-maven-repo/</url>
+        </repository>
+        <!-- 快照版本仓库 -->
+        <snapshotRepository>
+            <id>sunboat-maven-repo</id>
+            <name>sunboat-maven-repo</name>
+            <url>http://localhost:8081/repository/sunboat-maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

@@ -1,7 +1,7 @@
-package com.company.common.core.result;
+package com.sunboat.common.core.result;
 
 
-import com.company.common.core.enums.ResultCodeEnum;
+import com.sunboat.common.core.enums.ResultCodeEnum;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 

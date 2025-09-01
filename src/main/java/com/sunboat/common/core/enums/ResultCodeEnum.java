@@ -1,4 +1,4 @@
-package com.company.common.core.enums;
+package com.sunboat.common.core.enums;
 
 import lombok.Getter;
 
