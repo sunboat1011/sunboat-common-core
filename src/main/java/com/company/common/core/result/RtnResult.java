@@ -1,15 +1,17 @@
 package com.company.common.core.result;
 
+
 import com.company.common.core.enums.ResultCodeEnum;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 统一API返回结果封装
+ * 统一返回结果封装
  */
 @Data
-public class Result<T> implements Serializable {
+public class RtnResult<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -18,69 +20,103 @@ public class Result<T> implements Serializable {
     private int code;
 
     /**
-     * 提示信息
+     * 消息
      */
-    private String msg;
+    private String message;
 
     /**
      * 数据
      */
     private T data;
 
-    public Result() {}
+    /**
+     * 分页信息，有数据且是分页查询时才返回
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private PageInfo pageInfo;
 
-    private Result(int code, String msg, T data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
-    }
+    /**
+     * 私有构造方法
+     */
+    private RtnResult() {}
 
     /**
      * 成功返回
      */
-    public static <T> Result<T> success() {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMsg(), null);
+    public static <T> RtnResult<T> success(T data) {
+        RtnResult<T> rtnResult = new RtnResult<>();
+        rtnResult.code = ResultCodeEnum.SUCCESS.getCode();
+        rtnResult.message = ResultCodeEnum.SUCCESS.getMessage();
+        rtnResult.data = data;
+        return rtnResult;
     }
 
     /**
-     * 成功返回数据
+     * 带分页信息的成功返回
      */
-    public static <T> Result<T> success(T data) {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), ResultCodeEnum.SUCCESS.getMsg(), data);
-    }
-
-    /**
-     * 成功返回消息和数据
-     */
-    public static <T> Result<T> success(String msg, T data) {
-        return new Result<>(ResultCodeEnum.SUCCESS.getCode(), msg, data);
+    public static <T> RtnResult<T> success(T data, long total, int pageNum, int pageSize) {
+        RtnResult<T> rtnResult = success(data);
+        rtnResult.pageInfo = new PageInfo(total, pageNum, pageSize);
+        return rtnResult;
     }
 
     /**
      * 失败返回
      */
-    public static <T> Result<T> fail() {
-        return new Result<>(ResultCodeEnum.FAIL.getCode(), ResultCodeEnum.FAIL.getMsg(), null);
+    public static <T> RtnResult<T> fail(int code, String message) {
+        RtnResult<T> rtnResult = new RtnResult<>();
+        rtnResult.code = code;
+        rtnResult.message = message;
+        return rtnResult;
     }
 
     /**
-     * 失败返回消息
+     * 失败返回
      */
-    public static <T> Result<T> fail(String msg) {
-        return new Result<>(ResultCodeEnum.FAIL.getCode(), msg, null);
+    public static <T> RtnResult<T> fail(ResultCodeEnum resultCode) {
+        return fail(resultCode.getCode(), resultCode.getMessage());
     }
 
     /**
-     * 失败返回状态码和消息
+     * 失败返回
      */
-    public static <T> Result<T> fail(int code, String msg) {
-        return new Result<>(code, msg, null);
+    public static <T> RtnResult<T> fail(ResultCodeEnum resultCode, String message) {
+        return fail(resultCode.getCode(), message);
     }
 
     /**
-     * 根据枚举返回
+     * 分页信息内部类
      */
-    public static <T> Result<T> error(ResultCodeEnum resultCodeEnum) {
-        return new Result<>(resultCodeEnum.getCode(), resultCodeEnum.getMsg(), null);
+    @Data
+    public static class PageInfo implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 总记录数
+         */
+        private long total;
+
+        /**
+         * 当前页码
+         */
+        private int pageNum;
+
+        /**
+         * 每页条数
+         */
+        private int pageSize;
+
+        /**
+         * 总页数
+         */
+        private int totalPages;
+
+        public PageInfo(long total, int pageNum, int pageSize) {
+            this.total = total;
+            this.pageNum = pageNum;
+            this.pageSize = pageSize;
+            this.totalPages = (int) Math.ceil((double) total / pageSize);
+        }
     }
 }
+    
