@@ -4,10 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- 父依赖统一管理 Spring Boot 版本（2.7.x 稳定版） -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.0</version>
+        <version>2.7.15</version> <!-- 2.7.x 最新稳定版，避免子依赖版本冲突 -->
         <relativePath/>
     </parent>
 
@@ -19,195 +20,127 @@
     <packaging>jar</packaging>
 
     <properties>
-
-        <!-- Java 版本 -->
         <java.version>1.8</java.version>
-        <!-- Spring Boot 版本 -->
-        <spring-boot.version>2.7.15</spring-boot.version>
+        <!-- 显式声明 Spring Data Redis 版本（与 Spring Boot 2.7.15 内置版本一致） -->
+        <spring-data-redis.version>2.7.15</spring-data-redis.version>
+        <!-- Redisson 版本：3.18.0 是官方推荐与 Spring Boot 2.7.x + Spring Data Redis 2.7.x 兼容的版本 -->
+        <redisson.version>3.18.0</redisson.version>
     </properties>
 
     <dependencies>
-        <!-- Spring Boot 基础依赖 -->
+        <!-- 1. Spring Boot 核心依赖（父依赖已管理版本，无需重复指定） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.3.20</version> <!-- 版本号可调整 -->
-        </dependency>
-
-        <!-- Lombok 简化代码 -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- Redisson 核心依赖（适配 Spring Boot） -->
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson-spring-boot-starter</artifactId>-->
-<!--            <version>3.20.1</version> &lt;!&ndash; 选择与 Spring Boot 版本兼容的版本 &ndash;&gt;-->
-<!--        </dependency>-->
-
-        <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-data-27 -->
-        <dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-data-27</artifactId>
-            <version>3.20.1</version>
-        </dependency>
-
-        <!-- JSON 处理 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <!-- API 文档 -->
-<!--        <dependency>-->
-<!--            <groupId>io.springfox</groupId>-->
-<!--            <artifactId>springfox-boot-starter</artifactId>-->
-<!--            <version>2.9.2</version>-->
-<!--        </dependency>-->
-
-        <!-- 测试依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <!-- JUnit Jupiter API -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Spring Boot 测试依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- JUnit Jupiter Engine -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
-            <scope>test</scope>
-        </dependency>
-
-
-
-        <!-- 用于构建 Web 应用程序，集成 Spring MVC、Tomcat 等 -->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>3.2.1</version>
         </dependency>
-
-
-
-
-
-        <!-- 缓存相关依赖 -->
-        <!-- 为 Spring Boot 应用添加缓存功能 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <!-- 使用 Redis 作为缓存 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>2.7.0</version>
-        </dependency>
-
-        <!-- 消息队列相关依赖 -->
-        <!-- Spring Boot 集成 RabbitMQ 消息队列 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-
-
-        <!-- JSON 处理依赖，Jackson 是 Spring Boot 默认的 JSON 处理库 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.16.0</version>
-        </dependency>
-
-        <!-- 日志相关依赖，Spring Boot 默认使用 Logback 作为日志框架 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!-- 2. 缓存与 Redis 核心依赖（关键修复点） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <!-- Spring Data Redis：版本与父依赖一致，避免类缺失 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-data-redis.version}</version>
+        </dependency>
+        <!-- Redisson：使用 3.18.0 版本，与 Spring Data Redis 2.7.x 完全兼容（解决 Tuple 类缺失问题） -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>${redisson.version}</version>
+            <!-- 排除 Redisson 自带的 Spring Data Redis 依赖，强制使用项目统一版本 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.data</groupId>
+                    <artifactId>spring-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- 3. 消息队列依赖（版本与父依赖一致） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- 4. 工具类与日志依赖 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <!-- 版本由父依赖管理，避免与 Spring Boot 内置 Jackson 冲突 -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.16</version>
+            <version>5.8.16</version> <!-- 与 Spring Boot 2.7.x 兼容的稳定版 -->
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.12</version>
+            <optional>true</optional>
         </dependency>
-
-        <!-- Freemarker Template Engine -->
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.31</version>
         </dependency>
+
+        <!-- 5. 测试依赖（版本统一，避免冲突） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- 移除spring-boot-maven-plugin或仅保留编译功能 -->
+            <!-- Maven 编译插件：与 Java 1.8 适配 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
-    <!-- 分发管理 -->
+    <!-- 分发管理（保持原配置不变） -->
     <distributionManagement>
-        <!-- 发布版本仓库 -->
         <repository>
             <id>sunboat-maven-repo</id>
             <name>sunboat-maven-repo</name>
             <url>http://localhost:8081/repository/sunboat-maven-repo/</url>
         </repository>
-        <!-- 快照版本仓库 -->
         <snapshotRepository>
             <id>sunboat-maven-repo</id>
             <name>sunboat-maven-repo</name>
